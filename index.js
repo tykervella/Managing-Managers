@@ -270,6 +270,27 @@ function updateRole() {
   }
 }
 
+function viewByDept() {
+  db.promise().query(`SELECT * FROM department`)
+  .then(([req, res]) => {
+    const departments= req.map(req => ({name: req.department_name, value: req.id }));
+    
+    inquirer
+    .prompt([
+      {
+        type: 'list',
+        name: 'department',
+        message: 'What department do you wish to view?',
+        choices: departments,
+      },
+    ])
+    .then((req) => {
+      const department_id = req.department
+      console.log(department_id)
+    });
+  });
+}
+
 
 ///////////// COMMAND LINE INTERFACE FUNCTIONS ///////////// 
 
@@ -290,7 +311,8 @@ function mainMenu() {
           {name: "Add a department.", value: 004},
           {name: "Add a role.", value: 005},
           {name: "Add an employee.", value: 006},
-          {name: "Update an employee role.", value: 007}
+          {name: "Update an employee role.", value: 007},
+          {name: "View all employees in a deparment.", value: 008}
         ]
       },
     ])
@@ -325,6 +347,10 @@ function mainMenu() {
         console.log(`Updating employee's role...`);
         updateRole();
         break;
+      case 7:
+        console.log(`Viewing all employees in a department...`);
+        updateRole();
+        break;
     }
   });
 }
@@ -353,4 +379,6 @@ function returnMain() {
 }
 
 // Call the mainMenu function to start the prompt when node index.js is run
-mainMenu();
+// mainMenu();
+
+viewByDept()
